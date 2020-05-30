@@ -1,0 +1,62 @@
+--- fff	2020-05-30 16:46:23.836969297 +0200
++++ fff_new	2020-05-25 20:06:30.083376065 +0200
+@@ -352,6 +352,10 @@
+     ((y=scroll_new_pos))
+ }
+ 
++preview() {
++    open_preview.sh ${list[scroll]}
++}
++
+ draw_img() {
+     # Draw an image file on the screen using w3m-img.
+     # X isn't running, do nothing.
+@@ -375,15 +379,20 @@
+         return
+     }
+ 
+-    # Get terminal window size in pixels.
+-    IFS=$'\n' read -d "" -ra win_info \
+-        < <(xdotool getactivewindow getwindowgeometry --shell)
+-
+-    # Sets the variables: WIDTH and HEIGHT
+-    export "${win_info[@]}" &>/dev/null || {
+-        cmd_line "error: Failed to retrieve window size."
+-        return
+-    }
++    ## This is all for xdotool:
++    ## Get terminal window size in pixels.
++    #IFS=$'\n' read -d "" -ra win_info \
++    #    < <(xdotool getactivewindow getwindowgeometry --shell)
++    #
++    ## Sets the variables: WIDTH and HEIGHT
++    #export "${win_info[@]}" &>/dev/null || {
++    #    cmd_line "error: Failed to retrieve window size."
++    #    return
++    #}
++
++    WID=$(pfw)
++    WIDTH=$(wattr w $WID)
++    HEIGHT=$(wattr h $WID)
+ 
+     # Get the image size in pixels.
+     read -r img_width img_height < <("$w3m" <<< "5;${list[scroll]}")
+@@ -963,7 +972,7 @@
+ 
+         # Show image in terminal.
+         "${FFF_KEY_IMAGE:=i}")
+-            draw_img
++            preview # here used to be the call to draw_img
+         ;;
+ 
+         # Go to dir.
+@@ -1064,6 +1073,9 @@
+     # 'nocaseglob': Glob case insensitively (Used for case insensitive search).
+     # 'nullglob':   Don't expand non-matching globs to themselves.
+     shopt -s nocaseglob nullglob
++    
++    # resizes window to specified size
++    wars.sh 400 400 $(pfw)
+ 
+     get_os
+     get_term_size
