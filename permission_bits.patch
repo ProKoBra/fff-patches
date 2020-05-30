@@ -1,0 +1,16 @@
+--- fff	2020-05-25 15:52:02.126999537 +0200
++++ fff_upstream	2019-02-07 15:53:02.000000000 +0100
+@@ -168,12 +168,11 @@
+     # '\e[H\e[K':  Clear line below status_line.
+     # '\e8':       Restore cursor position.
+     #              This is more widely supported than '\e[u'.
+-    printf '\e7\e[%sH\e[30;4%sm%*s\r%s %s %s %s\e[m\e[%sH\e[K\e8' \
++    printf '\e7\e[%sH\e[30;4%sm%*s\r%s %s%s\e[m\e[%sH\e[K\e8' \
+            "$((LINES-1))" \
+            "${FFF_COL2:-1}" \
+            "$COLUMNS" "" \
+            "($((scroll+1))/$((list_total+1)))" \
+-           "$(stat -c %A ${list[scroll]} 2> /dev/null)" \
+            "${marked_files[*]:+${mark_ui}}" \
+            "${1:-${PWD_escaped:-/}}" \
+            "$LINES"
